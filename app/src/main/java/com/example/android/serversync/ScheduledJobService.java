@@ -12,8 +12,28 @@ import android.util.Log;
 public class ScheduledJobService extends JobService implements Handler.Callback {
     private static final String TAG = ScheduledJobService.class.getSimpleName();
 
-    private Handler mJobProcessor = new Handler(this);
+    private HandlerThread mWorkerThread;
+    private Handler mJobProcessor;
 
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        Log.d(TAG, "ScheduledJobService Created");
+        //Create a background worker thread for asynchronous jobs
+        mWorkerThread = new HandlerThread(TAG, Process.THREAD_PRIORITY_BACKGROUND);
+        mWorkerThread.start();
+        mJobProcessor = new Handler(mWorkerThread.getLooper(), this);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG, "ScheduledJobService Destroyed");
+        //Terminate the worker
+        mWorkerThread.quit();
+    }
+
+    //The code in this method is triggered on the background worker thread
     @Override
     public boolean handleMessage(Message msg) {
         final JobParameters params = (JobParameters) msg.obj;
@@ -31,6 +51,9 @@ public class ScheduledJobService extends JobService implements Handler.Callback 
 
     private void doWork() {
         Log.d(TAG, "JobService doing important background work");
+        if (Looper.myLooper() != Looper.getMainLooper()) {
+            Log.v(TAG, "…not on the main thread");
+        }
     }
 
     @Override
@@ -46,7 +69,7 @@ public class ScheduledJobService extends JobService implements Handler.Callback 
          * JobScheduler will hold a wakelock until you indicated work is done
          */
 
-        //To simulate a long task, we delay execution by 7.5 seconds
+        //To simulate a long task queue, we delay execution by 7.5 seconds
         mJobProcessor.sendMessageDelayed(
                 Message.obtain(mJobProcessor, 0, params),
                 7500
@@ -59,8 +82,8 @@ public class ScheduledJobService extends JobService implements Handler.Callback 
     @Override
     public boolean onStopJob(JobParameters params) {
         Log.w(TAG, "Request to stop job "+params.getJobId());
-        //If a cancel request comes in, clear out any pending work
-        mJobProcessor.removeMessages(0);
+        //If a cancel request comes in, clear out the pending work
+        mJobProcessor.removeMessages(0, params);
 
         //We are not interested in rescheduling the jobs
         return false;

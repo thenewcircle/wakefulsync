@@ -27,6 +27,8 @@
             </intent-filter>
         </activity>
 
+
+        <!-- Components to handle SyncAdapter work -->
         <service
             android:name=".ServerSyncService"
             android:exported="true">
@@ -52,6 +54,7 @@
             android:authorities="com.example.android.serversync.provider"
             android:exported="false"/>
 
+        <!-- Components to handle JobScheduler work -->
         <service android:name=".ScheduledJobService"
             android:permission="android.permission.BIND_JOB_SERVICE" />
 

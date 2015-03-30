@@ -13,7 +13,7 @@ public class SyncUtil {
 
     private static final int JOB_ID = 42;
 
-    public static void scheduleSyncLegacy() {
+    public static void triggerSyncLegacy() {
         /*
          * Extras key the sync operation with the framework. Modify
          * the extras to schedule a parallel sync with the same adapter
@@ -26,12 +26,13 @@ public class SyncUtil {
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public static void scheduleSyncLollipop(Context context) {
+    public static void triggerSyncLollipop(Context context) {
         JobScheduler jobScheduler =
                 (JobScheduler) context.getSystemService(Context.JOB_SCHEDULER_SERVICE);
 
         JobInfo job = new JobInfo.Builder(JOB_ID,
-                new ComponentName(context.getPackageName(), ScheduledJobService.class.getName()))
+                new ComponentName(context.getPackageName(),
+                        ScheduledJobService.class.getName()))
                 //We must be connected to the network
                 .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
                 //Only run this job if connected to stable power

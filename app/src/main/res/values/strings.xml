@@ -3,6 +3,6 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
-    <string name="button_schedule">Schedule Sync Work</string>
+    <string name="button_schedule">Trigger Sync Work</string>
     <string name="button_cancel">Cancel Sync</string>
 </resources>

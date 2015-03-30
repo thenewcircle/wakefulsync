@@ -17,11 +17,11 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
     }
 
-    public void onScheduleClick(View v) {
+    public void onTriggerClick(View v) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            SyncUtil.scheduleSyncLollipop(this);
+            SyncUtil.triggerSyncLollipop(this);
         } else {
-            SyncUtil.scheduleSyncLegacy();
+            SyncUtil.triggerSyncLegacy();
         }
     }
 

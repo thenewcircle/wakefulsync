@@ -15,7 +15,8 @@ public class ServerSyncAdapter extends AbstractThreadedSyncAdapter {
         super(context, autoInitialize);
     }
 
-    public ServerSyncAdapter(Context context, boolean autoInitialize, boolean allowParallelSyncs) {
+    public ServerSyncAdapter(Context context, boolean autoInitialize,
+                             boolean allowParallelSyncs) {
         super(context, autoInitialize, allowParallelSyncs);
     }
 
